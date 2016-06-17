@@ -88,7 +88,7 @@ func GetAuthURL(res http.ResponseWriter, req *http.Request) (string, error) {
 		fmt.Println("goth/gothic: no SESSION_SECRET environment variable is set. The default cookie store is not available and any calls will fail. Ignore this warning if you are using a different store.")
 	}
 
-	sessionName := getSessionName()
+	sessionName := GetSessionName()
 
 	providerName, err := GetProviderName(req)
 	if err != nil {
@@ -129,7 +129,7 @@ as either "provider" or ":provider".
 See https://github.com/jonnonz1/goth/examples/main.go to see this in action.
 */
 var CompleteUserAuth = func(res http.ResponseWriter, req *http.Request) (goth.User, error) {
-	sessionName := getSessionName()
+	sessionName := GetSessionName()
 
 	if !keySet && defaultStore == Store {
 		fmt.Println("goth/gothic: no SESSION_SECRET environment variable is set. The default cookie store is not available and any calls will fail. Ignore this warning if you are using a different store.")
@@ -184,7 +184,7 @@ func getProviderName(req *http.Request) (string, error) {
 }
 
 // SessionName is a function used to get the session name.
-var SessionName = getSessionName
+var GetSessionName = getSessionName
 
 func getSessionName() string {
 	return "_gothic_session"
