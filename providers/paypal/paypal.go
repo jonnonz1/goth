@@ -5,7 +5,7 @@ package paypal
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/markbates/goth"
+	"github.com/jonnonz1/goth"
 	"golang.org/x/oauth2"
 	"io"
 	"io/ioutil"

@@ -5,7 +5,7 @@ package cloudfoundry
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/markbates/goth"
+	"github.com/jonnonz1/goth"
 	"golang.org/x/net/context"
 	"golang.org/x/oauth2"
 	"io"

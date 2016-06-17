@@ -6,12 +6,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/markbates/goth"
-	"golang.org/x/oauth2"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+
+	"github.com/jonnonz1/goth"
+	"golang.org/x/oauth2"
 )
 
 const (

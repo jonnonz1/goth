@@ -4,7 +4,7 @@ package uber
 
 import (
 	"encoding/json"
-	"github.com/markbates/goth"
+	"github.com/jonnonz1/goth"
 	"golang.org/x/oauth2"
 	"io"
 	"net/http"

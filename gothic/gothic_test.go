@@ -7,9 +7,9 @@ import (
 	"testing"
 
 	"github.com/gorilla/sessions"
-	"github.com/markbates/goth"
-	. "github.com/markbates/goth/gothic"
-	"github.com/markbates/goth/providers/faux"
+	"github.com/jonnonz1/goth"
+	. "github.com/jonnonz1/goth/gothic"
+	"github.com/jonnonz1/goth/providers/faux"
 	"github.com/stretchr/testify/assert"
 )
 

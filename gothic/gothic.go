@@ -3,7 +3,7 @@ Package gothic wraps common behaviour when using Goth. This makes it quick, and 
 and running with Goth. Of course, if you want complete control over how things flow, in regards
 to the authentication process, feel free and use Goth directly.
 
-See https://github.com/markbates/goth/examples/main.go to see this in action.
+See https://github.com/jonnonz1/goth/examples/main.go to see this in action.
 */
 package gothic
 
@@ -14,11 +14,8 @@ import (
 	"os"
 
 	"github.com/gorilla/sessions"
-	"github.com/markbates/goth"
+	"github.com/jonnonz1/goth"
 )
-
-// SessionName is the key used to access the session store.
-const SessionName = "_gothic_session"
 
 // Store can/should be set by applications using gothic. The default is a cookie store.
 var Store sessions.Store
@@ -41,7 +38,7 @@ as either "provider" or ":provider".
 BeginAuthHandler will redirect the user to the appropriate authentication end-point
 for the requested provider.
 
-See https://github.com/markbates/goth/examples/main.go to see this in action.
+See https://github.com/jonnonz1/goth/examples/main.go to see this in action.
 */
 func BeginAuthHandler(res http.ResponseWriter, req *http.Request) {
 	url, err := GetAuthURL(res, req)
@@ -91,6 +88,8 @@ func GetAuthURL(res http.ResponseWriter, req *http.Request) (string, error) {
 		fmt.Println("goth/gothic: no SESSION_SECRET environment variable is set. The default cookie store is not available and any calls will fail. Ignore this warning if you are using a different store.")
 	}
 
+	sessionName := getSessionName()
+
 	providerName, err := GetProviderName(req)
 	if err != nil {
 		return "", err
@@ -110,8 +109,8 @@ func GetAuthURL(res http.ResponseWriter, req *http.Request) (string, error) {
 		return "", err
 	}
 
-	session, _ := Store.Get(req, SessionName)
-	session.Values[SessionName] = sess.Marshal()
+	session, _ := Store.Get(req, sessionName)
+	session.Values[sessionName] = sess.Marshal()
 	err = session.Save(req, res)
 	if err != nil {
 		return "", err
@@ -127,9 +126,10 @@ process and fetches all of the basic information about the user from the provide
 It expects to be able to get the name of the provider from the query parameters
 as either "provider" or ":provider".
 
-See https://github.com/markbates/goth/examples/main.go to see this in action.
+See https://github.com/jonnonz1/goth/examples/main.go to see this in action.
 */
 var CompleteUserAuth = func(res http.ResponseWriter, req *http.Request) (goth.User, error) {
+	sessionName := getSessionName()
 
 	if !keySet && defaultStore == Store {
 		fmt.Println("goth/gothic: no SESSION_SECRET environment variable is set. The default cookie store is not available and any calls will fail. Ignore this warning if you are using a different store.")
@@ -145,13 +145,13 @@ var CompleteUserAuth = func(res http.ResponseWriter, req *http.Request) (goth.Us
 		return goth.User{}, err
 	}
 
-	session, _ := Store.Get(req, SessionName)
+	session, _ := Store.Get(req, sessionName)
 
-	if session.Values[SessionName] == nil {
+	if session.Values[sessionName] == nil {
 		return goth.User{}, errors.New("could not find a matching session for this request")
 	}
 
-	sess, err := provider.UnmarshalSession(session.Values[SessionName].(string))
+	sess, err := provider.UnmarshalSession(session.Values[sessionName].(string))
 	if err != nil {
 		return goth.User{}, err
 	}
@@ -181,4 +181,11 @@ func getProviderName(req *http.Request) (string, error) {
 		return provider, errors.New("you must select a provider")
 	}
 	return provider, nil
+}
+
+// SessionName is a function used to get the session name.
+var SessionName = getSessionName
+
+func getSessionName() string {
+	return "_gothic_session"
 }
